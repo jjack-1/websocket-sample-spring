@@ -1,7 +1,6 @@
 package org.example.websocketsamplespring.config;
 
 import org.example.websocketsamplespring.model.dto.ParticipantListDto;
-import org.example.websocketsamplespring.model.dto.SystemMessageDto;
 import org.example.websocketsamplespring.service.StreamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -29,10 +28,6 @@ public class StompDisconnectEvent implements ApplicationListener<SessionDisconne
         if (userId != null && streamKey != null) {
             // [변경] 퇴장 로직 처리
             streamService.removeParticipant(streamKey, userId);
-
-            // [변경] 퇴장 알림 전송 (새 DTO 사용)
-            SystemMessageDto leaveMessage = new SystemMessageDto("leave", userId + "님이 퇴장했습니다.");
-            messagingTemplate.convertAndSend("/sub/" + streamKey + "/chat", leaveMessage);
 
             // [변경] 참가자 목록 업데이트 (새 DTO 사용)
             ParticipantListDto participantList = new ParticipantListDto(streamService.getParticipants(streamKey));
